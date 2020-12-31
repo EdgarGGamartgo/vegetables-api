@@ -5,7 +5,7 @@ const Producto = require('./models/Producto');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('./database');
-
+const { Op } = require('sequelize')
 const app = express();
 var jsonParser = bodyParser.json()
 app.use(cors())
@@ -51,16 +51,28 @@ const result = Promise.all(
       id_proveedor: p[15],
       nombre_proveedor: p[16],
       control: p[17],
+      imagen: p[18]
     })
   })
 )
 res.send({status: 201, data: result})
 });
 
-app.get('/products', jsonParser, async (req, res) =>  {
-
+app.get('/report/products', jsonParser, async (req, res) =>  {
   const products = await Producto.findAll()
   res.send({status: 200, data: products})
+});
+
+app.get('/products', jsonParser, async (req, res) =>  {
+  const products = await Producto.findAll({
+    where: {
+      existencia: {
+        [Op.gt]: 0
+      }
+    }
+  })
+  console.log('Products greater than 0: ', products)
+  res.send({status: 200, products})
 });
 
 // SEED

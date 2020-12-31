@@ -34,7 +34,8 @@ const Producto = sequelize.define('producto', {
   control: {
     type: Sequelize.BOOLEAN,
     allowNull: false
-  }
+  },
+  imagen: Sequelize.STRING,
 });
 
 module.exports = Producto;
