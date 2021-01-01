@@ -2,6 +2,7 @@ const express = require('express');
 var cors = require('cors')
 const Product = require('./models/Product');
 const Producto = require('./models/Producto');
+const Venta = require('./models/Venta');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('./database');
@@ -9,6 +10,9 @@ const { Op } = require('sequelize')
 const app = express();
 var jsonParser = bodyParser.json()
 app.use(cors())
+app.use(jsonParser)
+var invNum = require('invoice-number')
+
 const port = 3001;
 
 app.get('/status',  async (req, res) =>  {
@@ -25,7 +29,7 @@ app.get('/status',  async (req, res) =>  {
     res.send({status: "I'm alive with CORS access and database!", data: jitomates})
 });
 
-app.post('/products/create', jsonParser, async (req, res) =>  {
+app.post('/products/create', async (req, res) =>  {
 console.log('Reading request: ', req)
 const inventario = req.body
 console.log('body: ', req.body)
@@ -58,12 +62,12 @@ const result = Promise.all(
 res.send({status: 201, data: result})
 });
 
-app.get('/report/products', jsonParser, async (req, res) =>  {
+app.get('/report/products', async (req, res) =>  {
   const products = await Producto.findAll()
   res.send({status: 200, data: products})
 });
 
-app.get('/products', jsonParser, async (req, res) =>  {
+app.get('/products', async (req, res) =>  {
   const products = await Producto.findAll({
     where: {
       existencia: {
@@ -74,6 +78,28 @@ app.get('/products', jsonParser, async (req, res) =>  {
   console.log('Products greater than 0: ', products)
   res.send({status: 200, products})
 });
+
+// Invoice number
+
+app.get('/invoice', async (req, res) => {
+  const invoice = await Venta.findOne({
+    order: [ [ 'createdAt', 'DESC' ]],
+    raw: true
+
+  },
+  );
+  console.log('invoice: ', invoice)
+  res.send({ status: 200, invoice: `F${invoice.id_venta + 1}` })
+})
+
+app.post('/invoice/create', async (req, res) => {
+  const invoice = await Venta.create(req.body,
+  {
+    raw: true
+  });
+  console.log('invoice: ', invoice)
+  res.send({ status: 201, invoice })
+})
 
 // SEED
 
