@@ -89,7 +89,8 @@ app.get('/invoice', async (req, res) => {
   },
   );
   console.log('invoice: ', invoice)
-  res.send({ status: 200, invoice: `F${invoice.id_venta + 1}` })
+  const defaultInvoice = invoice && invoice.id_venta
+  res.send({ status: 200, invoice: `F${defaultInvoice ? invoice.id_venta + 1 : 1}` })
 })
 
 app.post('/invoice/create', async (req, res) => {
