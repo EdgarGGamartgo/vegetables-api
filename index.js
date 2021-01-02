@@ -102,6 +102,37 @@ app.post('/invoice/create', async (req, res) => {
   res.send({ status: 201, invoice })
 })
 
+app.post('/sale/create', async (req, res) => {
+  const { 
+    id_producto,
+    order,
+    folio,
+    nombre_producto,
+    unidad,
+    costo_unidad,
+    importe,
+  } = req.body
+  const product = await Producto.findByPk(id_producto);
+  const updatedRecord = await product.update({
+     existencia: product.existencia - order
+   }, {
+     where: {
+       id_producto
+     }
+   });
+  const newSale = await Venta.create({
+    folio,
+    nombre_producto,
+    unidad,
+    costo_unidad,
+    importe,
+  },
+  {
+    raw: true
+  }); 
+  res.send({ status: 201, newSale })
+})
+
 // SEED
 
 db.sync({ force: true }).then(result => {

@@ -10,6 +10,10 @@ const Venta = sequelize.define('venta', {
     primaryKey: true
   },
   folio: Sequelize.STRING,
+  nombre_producto: Sequelize.STRING,
+  unidad: Sequelize.STRING,
+  costo_unidad: Sequelize.DOUBLE,
+  importe: Sequelize.DOUBLE,
 });
 
 module.exports = Venta;
