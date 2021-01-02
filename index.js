@@ -103,34 +103,47 @@ app.post('/invoice/create', async (req, res) => {
 })
 
 app.post('/sale/create', async (req, res) => {
-  const { 
-    id_producto,
-    order,
-    folio,
-    nombre_producto,
-    unidad,
-    costo_unidad,
-    importe,
-  } = req.body
-  const product = await Producto.findByPk(id_producto);
-  const updatedRecord = await product.update({
-     existencia: product.existencia - order
-   }, {
-     where: {
-       id_producto
-     }
-   });
-  const newSale = await Venta.create({
-    folio,
-    nombre_producto,
-    unidad,
-    costo_unidad,
-    importe,
-  },
-  {
-    raw: true
-  }); 
-  res.send({ status: 201, newSale })
+  try {
+    const sales = await db.transaction(async (t) => {
+      return await Promise.all(
+        req.body.map(async(e) => {
+          const foundRecord = await Producto.findByPk(e.id_producto)
+          await foundRecord.update({
+            existencia: foundRecord.existencia - e.order
+          }, {
+            where: {
+              id_producto: e.id_producto
+            },
+            returning: true,
+            transaction: t
+          });
+          return await Venta.create({
+            folio: e.folio,
+            nombre_producto: e.nombre_producto,
+            unidad: e.unidad,
+            costo_unidad: e.costo_unidad,
+            importe_producto: e.importe_producto,
+            importe_total: e.importe_total
+          }, {
+            transaction: t
+          });    
+        })
+      )
+    });
+    res.send({ status: 201, sales })
+  } catch (error) {
+    console.log("Error when saving sales")
+  }
+  // req.body = { 
+  //   id_producto,
+  //   order,
+  //   folio,
+  //   nombre_producto,
+  //   unidad,
+  //   costo_unidad,
+  //   importe,
+  //   importe_total,
+  // }   
 })
 
 // SEED

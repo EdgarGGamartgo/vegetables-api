@@ -13,7 +13,8 @@ const Venta = sequelize.define('venta', {
   nombre_producto: Sequelize.STRING,
   unidad: Sequelize.STRING,
   costo_unidad: Sequelize.DOUBLE,
-  importe: Sequelize.DOUBLE,
+  importe_producto: Sequelize.DOUBLE,
+  importe_total: Sequelize.DOUBLE,
 });
 
 module.exports = Venta;
