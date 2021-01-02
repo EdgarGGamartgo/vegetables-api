@@ -2,6 +2,7 @@ const express = require('express');
 var cors = require('cors')
 const Product = require('./models/Product');
 const Producto = require('./models/Producto');
+const Usuario = require('./models/Usuario');
 const Venta = require('./models/Venta');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -104,9 +105,10 @@ app.post('/invoice/create', async (req, res) => {
 
 app.post('/sale/create', async (req, res) => {
   try {
+    const { products, userData } = req.body
     const sales = await db.transaction(async (t) => {
       return await Promise.all(
-        req.body.map(async(e) => {
+        products.map(async(e) => {
           const foundRecord = await Producto.findByPk(e.id_producto)
           await foundRecord.update({
             existencia: foundRecord.existencia - e.order
@@ -130,23 +132,25 @@ app.post('/sale/create', async (req, res) => {
         })
       )
     });
-    res.send({ status: 201, sales })
+    const user = await Usuario.create({
+      nombre: userData.name,
+      apellido_paterno: userData.lastName,
+      apellido_materno: userData.secondLastName,
+      telefono: userData.phone,
+      email: userData.email,
+      calle: userData.street,
+      colonia: userData.town,
+      ciudad: userData.city,
+      estado: userData.state,
+      codigo_postal: userData.zip,
+      folio: products[0].folio,
+      rol: "CLIENTE"
+    })
+    res.send({ status: 201, sales, user })
   } catch (error) {
     console.log("Error when saving sales")
   }
-  // req.body = { 
-  //   id_producto,
-  //   order,
-  //   folio,
-  //   nombre_producto,
-  //   unidad,
-  //   costo_unidad,
-  //   importe,
-  //   importe_total,
-  // }   
 })
-
-// SEED
 
 db.sync({ force: true }).then(result => {
     console.log(result)
