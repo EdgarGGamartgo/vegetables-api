@@ -23,17 +23,13 @@ app.get('/status',  async (req, res) =>  {
         imageUrl: 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png',
         description: 'Saladed'
       })
-    console.log('FINALLY')
         
     const jitomates = await Product.findAll()
-    console.log('jitomates: ', jitomates)
     res.send({status: "I'm alive with CORS access and database!", data: jitomates})
 });
 
 app.post('/products/create', async (req, res) =>  {
-console.log('Reading request: ', req)
 const inventario = req.body
-console.log('body: ', req.body)
 req.body.data.splice(0, 1);
 const result = Promise.all(
   req.body.data.map(async (p) => {
@@ -76,7 +72,6 @@ app.get('/products', async (req, res) =>  {
       }
     }
   })
-  console.log('Products greater than 0: ', products)
   res.send({status: 200, products})
 });
 
@@ -89,7 +84,6 @@ app.get('/invoice', async (req, res) => {
 
   },
   );
-  console.log('invoice: ', invoice)
   const defaultInvoice = invoice && invoice.id_venta
   res.send({ status: 200, invoice: `F${defaultInvoice ? invoice.id_venta + 1 : 1}` })
 })
@@ -99,7 +93,6 @@ app.post('/invoice/create', async (req, res) => {
   {
     raw: true
   });
-  console.log('invoice: ', invoice)
   res.send({ status: 201, invoice })
 })
 
@@ -110,25 +103,36 @@ app.post('/sale/create', async (req, res) => {
       return await Promise.all(
         products.map(async(e) => {
           const foundRecord = await Producto.findByPk(e.id_producto)
-          await foundRecord.update({
-            existencia: foundRecord.existencia - e.order
-          }, {
-            where: {
-              id_producto: e.id_producto
-            },
-            returning: true,
-            transaction: t
-          });
-          return await Venta.create({
-            folio: e.folio,
-            nombre_producto: e.nombre_producto,
-            unidad: e.unidad,
-            costo_unidad: e.costo_unidad,
-            importe_producto: e.importe_producto,
-            importe_total: e.importe_total
-          }, {
-            transaction: t
-          });    
+          if (e.order <= foundRecord.existencia) {
+            await foundRecord.update({
+              existencia: foundRecord.existencia - e.order
+            }, {
+              where: {
+                id_producto: e.id_producto
+              },
+              returning: true,
+              transaction: t
+            });
+            return await Venta.create({
+              folio: e.folio,
+              nombre_producto: e.nombre_producto,
+              unidad: e.unidad,
+              costo_unidad: e.costo_unidad,
+              importe_producto: e.importe_producto,
+              importe_total: e.importe_total
+            }, {
+              transaction: t
+            }); 
+          } else {
+              //throw new Error(`Lo sentimos, ya no tenemos disponible ${e.order} ${e.unidad} de ${e.nombre_producto}.`)
+              console.log(`Lo sentimos, ya no tenemos disponible ${e.order} ${e.unidad} de ${e.nombre_producto}.`)
+              res.status(400).send({ status: 400, error: {
+                msg: `Lo sentimos, ya no tenemos disponible ${e.order} ${e.unidad} de ${e.nombre_producto}.`,
+                order: e.order,
+                unidad: e.unidad,
+                nombre_producto: e.nombre_producto
+              }})
+          }
         })
       )
     });
@@ -148,12 +152,11 @@ app.post('/sale/create', async (req, res) => {
     })
     res.send({ status: 201, sales, user })
   } catch (error) {
-    console.log("Error when saving sales")
+    console.log("Error when saving sales: ")
   }
 })
 
 db.sync({ force: true }).then(result => {
-    console.log(result)
     app.listen(port, () => console.log(`Example app listening on port ${port}, GANBAREYO DESU NE!!`))
 }).catch(err => {
     console.log(err)
