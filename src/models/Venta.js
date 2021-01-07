@@ -1,8 +1,7 @@
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize'
+import { sequelize } from '../util/database'
 
-const sequelize = require('../database');
-
-const Venta = sequelize.define('venta', {
+export const Venta = sequelize.define('venta', {
   id_venta: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -16,5 +15,3 @@ const Venta = sequelize.define('venta', {
   importe_producto: Sequelize.DOUBLE,
   importe_total: Sequelize.DOUBLE,
 });
-
-module.exports = Venta;

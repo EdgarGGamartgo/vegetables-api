@@ -1,8 +1,7 @@
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize'
+import { sequelize } from '../util/database'
 
-const sequelize = require('../database');
-
-const Usuario = sequelize.define('usuario', {
+export const Usuario = sequelize.define('usuario', {
   id_usuario: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -22,5 +21,3 @@ const Usuario = sequelize.define('usuario', {
   folio: Sequelize.STRING,
   rol: Sequelize.STRING,
 });
-
-module.exports = Usuario;
