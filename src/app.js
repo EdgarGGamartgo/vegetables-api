@@ -10,7 +10,7 @@ import { productsRouter } from './routes/getProducts'
 import { loadRouter } from './routes/loadExcel'
 import { saleRouter } from './routes/sale'
 import { notificationsRouter } from './routes/notifications'
-
+import { downloadInvoiceRouter } from './routes/downloadInvoice'
 
 const app = express();
 dotenv.config()
@@ -23,6 +23,7 @@ app.use(cors())
 app.options('*', cors());
 var jsonParser = bodyParser.json()
 app.use(jsonParser)
+app.use(downloadInvoiceRouter)
 app.use(downloadRouter)
 app.use(invoiceRouter)
 app.use(productsRouter)

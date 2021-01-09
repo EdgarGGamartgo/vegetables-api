@@ -17,7 +17,12 @@ export const mail = async(to, subject, html) => {
             from: process.env.mail_auth_user,
             to,
             subject,
-            html
+            html,
+            attachments: [{
+                filename: 'pedido_aceptado.pdf',
+                path: './assets/pedido_aceptado.pdf',
+                contentType: 'application/pdf'
+            }],
         };
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
