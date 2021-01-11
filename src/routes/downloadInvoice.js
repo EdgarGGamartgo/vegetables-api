@@ -4,9 +4,10 @@ import { invoicePdf } from '../services/invoicePdf'
 
 const router = express.Router()
 
-router.get('/api/download/invoice', async(req, res, next) => {
+router.post('/api/download/invoice', async(req, res, next) => {
     try {
-        const invoiceFile = await invoicePdf()
+        const { products, userData } = req.body
+        const invoiceFile = await invoicePdf(products, userData)
 
         if(invoiceFile) {
             const src = fs.createReadStream('./assets/pedido_aceptado.pdf');

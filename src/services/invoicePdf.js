@@ -1,55 +1,44 @@
 import niceInvoice from 'nice-invoice'
 import fs from 'fs'
 
-export const invoicePdf = async() => {
+export const invoicePdf = async(products, userData) => {
+
+    const items = products.map(product => {
+      return {
+            item: product.nombre_producto,
+            description: '',
+            quantity: product.order,
+            price: product.costo_unidad, 
+            total: product.importe_producto,
+            tax: ''
+      }
+    })
 
     const invoiceDetail = {
         shipping: {
-          name: "Micheal",
-          address: "1234 Main Street",
-          city: "Dubai",
-          state: "Dubai",
-          country: "UAE",
-          postal_code: 94111
+          name: userData.name,
+          address: `${userData.street}, ${userData.town}`,
+          city: userData.city,
+          state: userData.state,
+          country: "Mexico",
+          postal_code: userData.zip
         },
-        items: [
-          {
-            item: "Chair",
-            description: "Wooden chair",
-            quantity: 1,
-            price: 50.00, 
-            tax: "10%"
-          },
-          {
-            item: "Watch",
-            description: "Wall watch for office",
-            quantity: 2,
-            price: 30.00,
-            tax: "10%"
-          },
-          {
-            item: "Water Glass Set",
-            description: "Water glass set for office",
-            quantity: 1,
-            price: 35.00,
-            tax: ""
-          }
-        ],
-        subtotal: 156,
-        total: 156,
-        order_number: 1234222,
+        items,
+        subtotal: products[0].importe_total,
+        total: products[0].importe_total,
+        order_number: products[0].folio,
         header:{
-            company_name: "Nice Invoice",
+            company_name: "SAN MARTIN",
             company_logo: "logo.png",
-            company_address: "Nice Invoice. 123 William Street 1th Floor New York, NY 123456"
+            company_address: "Calle 48 no 258 entre moctezuma y valle"
         },
         footer:{
-          text: "Any footer text - you can add any text here"
+          text: ""
         },
         currency_symbol:"$", 
         date: {
-          billing_date: "08 August 2020",
-          due_date: "10 September 2020",
+          billing_date: new Date().toLocaleDateString(),
+          due_date: new Date().toLocaleDateString(),
         }
     };
     

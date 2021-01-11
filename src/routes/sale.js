@@ -10,6 +10,7 @@ const router = express.Router()
 router.post('/sale/create', async (req, res) => {
   try {
     const { products, userData } = req.body
+    // Dynamic PDF invoice
     const notification = await orderNotification(userData.email, 'PEDIDO RECIBIDO', products)
     if (notification) {
       // Logica si se envio el correo con exito
