@@ -1,8 +1,8 @@
-import niceInvoice from 'nice-invoice'
+import niceInvoice from './../../own_modules/nice-invoice'
 import fs from 'fs'
 
 export const invoicePdf = async(products, userData) => {
-
+    console.log('DATA de PDF: ', products, userData)
     const items = products.map(product => {
       return {
             item: product.nombre_producto,
@@ -16,7 +16,7 @@ export const invoicePdf = async(products, userData) => {
 
     const invoiceDetail = {
         shipping: {
-          name: userData.name,
+          name: `${userData.name} ${userData.lastName} ${userData.secondLastName}`,
           address: `${userData.street}, ${userData.town}`,
           city: userData.city,
           state: userData.state,

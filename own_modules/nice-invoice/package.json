@@ -1,0 +1,58 @@
+{
+  "_from": "nice-invoice",
+  "_id": "nice-invoice@1.0.6",
+  "_inBundle": false,
+  "_integrity": "sha512-x2jk6M3oA9u55m7lLFiXKIV9caLUsh1EzKy7iTAD7Ln6/zrblPJ3C9s/+VFURNAPNvJ2Qn768D03H5L1p+yz3A==",
+  "_location": "/nice-invoice",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "nice-invoice",
+    "name": "nice-invoice",
+    "escapedName": "nice-invoice",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/nice-invoice/-/nice-invoice-1.0.6.tgz",
+  "_shasum": "5bef0175d9fdca860e9132e29bb9441e7a05276d",
+  "_spec": "nice-invoice",
+  "_where": "/media/edgar/DATA/eCommerce/api/vegetables-api",
+  "author": {
+    "name": "dev6.0"
+  },
+  "bugs": {
+    "url": "https://github.com/bakhtawarshah/nice-invoice/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "pdfkit": "^0.11.0"
+  },
+  "deprecated": false,
+  "description": "An easy and quick way to generate invoice",
+  "homepage": "https://github.com/bakhtawarshah/nice-invoice#readme",
+  "keywords": [
+    "node",
+    "nodejs",
+    "nodejs",
+    "invoice",
+    "invoice",
+    "receipt"
+  ],
+  "license": "MIT",
+  "main": "app.js",
+  "name": "nice-invoice",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bakhtawarshah/nice-invoice.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.6"
+}
