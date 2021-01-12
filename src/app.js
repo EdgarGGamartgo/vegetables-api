@@ -11,6 +11,7 @@ import { loadRouter } from './routes/loadExcel'
 import { saleRouter } from './routes/sale'
 import { notificationsRouter } from './routes/notifications'
 import { downloadInvoiceRouter } from './routes/downloadInvoice'
+import { validatePurchaseRouter } from './routes/validatePurchase'
 
 const app = express();
 dotenv.config()
@@ -23,6 +24,7 @@ app.use(cors())
 app.options('*', cors());
 var jsonParser = bodyParser.json()
 app.use(jsonParser)
+app.use(validatePurchaseRouter)
 app.use(downloadInvoiceRouter)
 app.use(downloadRouter)
 app.use(invoiceRouter)

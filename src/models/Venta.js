@@ -9,9 +9,11 @@ export const Venta = sequelize.define('venta', {
     primaryKey: true
   },
   folio: Sequelize.STRING,
+  codigo_compra: Sequelize.STRING,
   nombre_producto: Sequelize.STRING,
   unidad: Sequelize.STRING,
   costo_unidad: Sequelize.DOUBLE,
   importe_producto: Sequelize.DOUBLE,
   importe_total: Sequelize.DOUBLE,
+  estatus: Sequelize.STRING, // VALIDADA, RECHAZADA, PENDIENTE
 });

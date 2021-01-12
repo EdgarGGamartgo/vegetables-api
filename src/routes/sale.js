@@ -30,11 +30,13 @@ router.post('/sale/create', async (req, res) => {
               });
               return await Venta.create({
                 folio: e.folio,
+                codigo_compra: `${notification}${e.folio}`,
                 nombre_producto: e.nombre_producto,
                 unidad: e.unidad,
                 costo_unidad: e.costo_unidad,
                 importe_producto: e.importe_producto,
-                importe_total: e.importe_total
+                importe_total: e.importe_total,
+                estatus: "PENDIENTE"
               }, {
                 transaction: t
               });

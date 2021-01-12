@@ -28,7 +28,7 @@ export const orderNotification = async (to, subject, productos) => {
     const html = `
     <h1>San Martin</h1>
     <p>Muchas gracias por su preferencia. Su pedido ha sido recibido y en breve estaremos enviando 
-    sus productos a su domicilio. Por favor conserve este codigo de compra ${code}, y folio ${productos[0].folio}
+    sus productos a su domicilio. Por favor conserve este codigo de compra ${code}${productos[0].folio}, y folio ${productos[0].folio}
     el cual debera proporcionar al repartidor cuando se le entreguen sus productos.</p>
     <br>
     <p>Su pedido es:</p>
@@ -40,7 +40,7 @@ export const orderNotification = async (to, subject, productos) => {
     `
     const sentMail = await mail(to, subject, html)
     if (sentMail) {
-        return 'Email successfully sent'
+        return code
     }
     return null
 }
