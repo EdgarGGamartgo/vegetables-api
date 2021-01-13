@@ -84,7 +84,7 @@ let invoiceTable = (doc, invoice) => {
     "P.U",
     "Cantidad",
     "Importe",
-    "",//"Tax"
+  //  "",//"Tax"
   );
   generateHr(doc, invoiceTableTop + 20);
   doc.font("Helvetica");
@@ -92,6 +92,7 @@ let invoiceTable = (doc, invoice) => {
   for (i = 0; i < invoice.items.length; i++) {
     const item = invoice.items[i];
     const position = invoiceTableTop + (i + 1) * 30;
+    console.log('item.price: ', item.price)
     tableRow(
       doc,
       position,
@@ -99,8 +100,8 @@ let invoiceTable = (doc, invoice) => {
       item.description,
       formatCurrency(item.price, currencySymbol),
       item.quantity,
-      formatCurrency(applyTaxIfAvailable(item.price, item.quantity, item.tax), currencySymbol), 
-      checkIfTaxAvailable(item.tax)
+      formatCurrency(item.total, currencySymbol), // applyTaxIfAvailable(item.price, item.quantity, item.tax)
+    //  checkIfTaxAvailable(item.tax)
     );
 
     generateHr(doc, position + 20);
@@ -151,16 +152,16 @@ let tableRow = (
   unitCost,
   quantity,
   lineTotal,
-  tax
+//  tax
 )=>{
     doc
     .fontSize(10)
     .text(item, 50, y)
     .text(description, 130, y)
-    .text(unitCost, 280, y, { width: 90, align: "right" })
-    .text(quantity, 335, y, { width: 90, align: "right" })
-    .text(lineTotal, 400, y,{ width: 90, align: "right" })
-    .text(tax, 0, y, { align: "right" });
+    .text(unitCost, 330, y, { width: 90, align: "right" })
+    .text(quantity, 385, y, { width: 90, align: "right" })
+    .text(lineTotal, 450, y,{ width: 90, align: "right" })
+ //   .text(tax, 0, y, { align: "right" });
 }
 
 let generateHr = (doc, y) => {
@@ -173,6 +174,7 @@ let generateHr = (doc, y) => {
 }
 
 let formatCurrency = (cents, symbol) => {
+  console.log('formatCurrency: ', cents, symbol)
   return symbol + cents.toFixed(2);
 }
 
@@ -191,7 +193,7 @@ let checkIfTaxAvailable = tax => {
   if(Number.isNaN(validatedTax) === false && validatedTax <= 100 && validatedTax > 0){
     var taxValue = tax;  
   }else{
-    var taxValue = '---';
+    var taxValue = '';
   }
   
   return taxValue;

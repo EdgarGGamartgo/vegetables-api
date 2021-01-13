@@ -1,14 +1,16 @@
 import niceInvoice from './../../own_modules/nice-invoice'
 import fs from 'fs'
+import { formatDate } from '../../src/util/formatDate'
 
 export const invoicePdf = async(products, userData) => {
     console.log('DATA de PDF: ', products, userData)
     const items = products.map(product => {
+      console.log("product.costo_unidad: ", product.costo_unidad)
       return {
             item: product.nombre_producto,
             description: '',
-            quantity: product.order,
-            price: product.costo_unidad, 
+            quantity: `${product.order} ${product.unidad}`,
+            price: Number(product.costo_unidad), 
             total: product.importe_producto,
             tax: ''
       }
@@ -37,8 +39,8 @@ export const invoicePdf = async(products, userData) => {
         },
         currency_symbol:"$", 
         date: {
-          billing_date: new Date().toLocaleDateString(),
-          due_date: new Date().toLocaleDateString(),
+          billing_date: formatDate(new Date().toLocaleDateString()),
+          due_date: formatDate(new Date().toLocaleDateString()),
         }
     };
     
