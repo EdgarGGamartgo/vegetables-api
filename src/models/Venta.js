@@ -16,4 +16,5 @@ export const Venta = sequelize.define('venta', {
   importe_producto: Sequelize.DOUBLE,
   importe_total: Sequelize.DOUBLE,
   estatus: Sequelize.STRING, // VALIDADA, RECHAZADA, PENDIENTE
+  isVisible: Sequelize.BOOLEAN
 });

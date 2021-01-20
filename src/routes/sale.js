@@ -38,6 +38,7 @@ router.post('/sale/create', async (req, res) => {
                 importe_total: e.importe_total,
                 estatus: "PENDIENTE"
               }, {
+                //include: [ user ],
                 transaction: t
               });
             } else {
@@ -67,8 +68,12 @@ router.post('/sale/create', async (req, res) => {
         estado: userData.state,
         codigo_postal: userData.zip,
         folio: products[0].folio,
-        rol: "CLIENTE"
+        rol: "CLIENTE",
+        ventas: sales
+      }, {
+        include: [Venta]
       })
+      console.log('Usuario recuperado: ', user)
       // Fin de logica
       res.send({ status: 201, sales, user })
     } else {
