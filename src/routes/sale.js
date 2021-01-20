@@ -13,6 +13,21 @@ router.post('/sale/create', async (req, res) => {
     // Dynamic PDF invoice
     const notification = await orderNotification(userData.email, 'PEDIDO RECIBIDO', products)
     if (notification) {
+      const user = await Usuario.create({
+        nombre: userData.name,
+        apellido_paterno: userData.lastName,
+        apellido_materno: userData.secondLastName,
+        telefono: userData.phone,
+        email: userData.email,
+        calle: userData.street,
+        colonia: userData.town,
+        ciudad: userData.city,
+        estado: userData.state,
+        codigo_postal: userData.zip,
+        folio: products[0].folio,
+        rol: "CLIENTE",
+      })
+      console.log('Usuario recuperado: ', user)
       // Logica si se envio el correo con exito
       const sales = await sequelize.transaction(async (t) => {
         return await Promise.all(
@@ -36,7 +51,8 @@ router.post('/sale/create', async (req, res) => {
                 costo_unidad: e.costo_unidad,
                 importe_producto: e.importe_producto,
                 importe_total: e.importe_total,
-                estatus: "PENDIENTE"
+                estatus: "PENDIENTE",
+                usuarioIdUsuario: user.id_usuario
               }, {
                 //include: [ user ],
                 transaction: t
@@ -56,24 +72,7 @@ router.post('/sale/create', async (req, res) => {
           })
         )
       });
-      const user = await Usuario.create({
-        nombre: userData.name,
-        apellido_paterno: userData.lastName,
-        apellido_materno: userData.secondLastName,
-        telefono: userData.phone,
-        email: userData.email,
-        calle: userData.street,
-        colonia: userData.town,
-        ciudad: userData.city,
-        estado: userData.state,
-        codigo_postal: userData.zip,
-        folio: products[0].folio,
-        rol: "CLIENTE",
-        ventas: sales
-      }, {
-        include: [Venta]
-      })
-      console.log('Usuario recuperado: ', user)
+      
       // Fin de logica
       res.send({ status: 201, sales, user })
     } else {

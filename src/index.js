@@ -7,9 +7,9 @@ const port = process.env.PORT || 3001;
 
 // Relations Databse
 // User-Venta (One -to - many)
-Usuario.hasMany(Venta, { as: 'ventas' });
+Usuario.hasMany(Venta); // , { as: 'ventas' }
 // Venta-User (Many - to - one)
-Venta.belongsTo(Usuario);
+Venta.belongsTo(Usuario, { constraints: true, onDelete: 'CASCADE' });
 
 sequelize.sync({ force: true }).then(result => {
     app.listen(port, () => console.log(`Example app listening on port ${port}, GANBAREYO DESU NE!!`))
