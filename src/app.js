@@ -14,6 +14,7 @@ import { downloadInvoiceRouter } from './routes/downloadInvoice'
 import { validatePurchaseRouter } from './routes/validatePurchase'
 import { downloadMinRouter } from './routes/downloadExcelMin'
 import { salesByUserRouter } from './routes/getSalesByUser'
+import { updateSaleRouter } from './routes/updateSale'
 
 const app = express();
 dotenv.config()
@@ -36,6 +37,7 @@ app.use(saleRouter)
 app.use(notificationsRouter)
 app.use(downloadMinRouter)
 app.use(salesByUserRouter)
+app.use(updateSaleRouter)
 
 app.all('*', async(req, res) => {
     res.status(400).send('This is not a valid route')
