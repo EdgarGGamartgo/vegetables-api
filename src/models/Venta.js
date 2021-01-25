@@ -11,6 +11,7 @@ export const Venta = sequelize.define('venta', {
   folio: Sequelize.STRING,
   codigo_compra: Sequelize.STRING,
   nombre_producto: Sequelize.STRING,
+  cantidad: Sequelize.INTEGER,
   unidad: Sequelize.STRING,
   costo_unidad: Sequelize.DOUBLE,
   importe_producto: Sequelize.DOUBLE,

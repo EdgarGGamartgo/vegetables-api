@@ -52,6 +52,7 @@ router.post('/sale/create', async (req, res) => {
                 importe_producto: e.importe_producto,
                 importe_total: e.importe_total,
                 estatus: "PENDIENTE",
+                cantidad: e.order,
                 usuarioIdUsuario: user.id_usuario
               }, {
                 //include: [ user ],
