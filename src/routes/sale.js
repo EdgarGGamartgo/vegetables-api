@@ -11,14 +11,15 @@ router.post('/sale/create', async (req, res) => {
   try {
     const { products, userData } = req.body
     // Dynamic PDF invoice
-    const notification = await orderNotification(userData.email, 'PEDIDO RECIBIDO', products)
+    const defaultEmail = userData.email ? userData.email.trim() : 'edgarggamartgo@gmail.com'
+    const notification = await orderNotification(defaultEmail, 'PEDIDO RECIBIDO', products)
     if (notification) {
       const user = await Usuario.create({
         nombre: userData.name,
         apellido_paterno: userData.lastName,
         apellido_materno: userData.secondLastName,
         telefono: userData.phone,
-        email: userData.email,
+        email: userData.email ? userData.email.trim() : '',
         calle: userData.street,
         colonia: userData.town,
         ciudad: userData.city,
@@ -60,10 +61,11 @@ router.post('/sale/create', async (req, res) => {
               });
             } else {
               //throw new Error(`Lo sentimos, ya no tenemos disponible ${e.order} ${e.unidad} de ${e.nombre_producto}.`)
+              // Posiblemente agregrar existencia. Hacer query a tabla Producto por id
               console.log(`Lo sentimos, ya no tenemos disponible ${e.order} ${e.unidad} de ${e.nombre_producto}.`)
               res.status(400).send({
                 status: 400, error: {
-                  msg: `Lo sentimos, ya no tenemos disponible ${e.order} ${e.unidad} de ${e.nombre_producto}.`,
+                  msg: `Lo sentimos, ya no tenemos disponible ${e.order} ${e.unidad} de ${e.nombre_producto}. Tenemos en existencia`,
                   order: e.order,
                   unidad: e.unidad,
                   nombre_producto: e.nombre_producto
