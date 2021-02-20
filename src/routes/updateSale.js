@@ -33,4 +33,21 @@ router.put('/update/sale/:folio', async (req, res) => {
     }
 })
 
+router.put('/update/visible', async (req, res) => {
+  const { folio, visible } = req.body
+  try {
+      await Venta.update({
+        isVisible: visible
+      },{
+        where: {
+          folio: folio
+        }
+      })
+      return res.status(201).send()
+  } catch(error) {
+      console.log('Error when updating sale: ', error)
+      return res.status(500).send('Error when inserting new sales')
+  }
+})
+
 export { router as updateSaleRouter }

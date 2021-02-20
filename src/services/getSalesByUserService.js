@@ -23,3 +23,16 @@ export const GetSalesByUserService = async() => {
         include: Usuario
     }) 
 }
+
+export const GetDeletedSalesByUserService = async() => {
+    return await Venta.findAll({
+        where: {
+            updatedAt: {
+                [Op.lt]: new Date(),
+                [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
+            },
+            isVisible: false
+        },
+        include: Usuario
+    }) 
+}
